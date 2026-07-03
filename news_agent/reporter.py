@@ -343,11 +343,12 @@ body {{
 }}
 .header h1 {{ font-size: 24px; margin-bottom: 8px; }}
 .header .subtitle {{ color: #a0aec0; font-size: 14px; }}
-.header .stats-row {{ display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap; }}
+.header .stats-row {{ display: flex; margin-top: 16px; flex-wrap: wrap; }}
 .header .stat-box {{
     background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 20px;
-    text-align: center; min-width: 80px;
+    text-align: center; min-width: 80px; margin-right: 12px; margin-bottom: 6px;
 }}
+.header .stat-box:last-child {{ margin-right: 0; }}
 .header .stat-box .num {{ font-size: 24px; font-weight: 700; }}
 .header .stat-box .label {{ font-size: 12px; color: #a0aec0; }}
 
@@ -356,21 +357,21 @@ body {{
     background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }}
-.stat-row {{ display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }}
+.stat-row {{ display: flex; align-items: center; margin-bottom: 8px; }}
 .stat-label {{ width: 100px; font-size: 14px; flex-shrink: 0; }}
-.stat-bar-bg {{ flex: 1; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }}
+.stat-bar-bg {{ flex: 1; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin: 0 8px; }}
 .stat-bar-fill {{ height: 100%; background: linear-gradient(90deg, #3b82f6, #8b5cf6); border-radius: 4px; transition: width 0.6s; }}
-.stat-count {{ width: 40px; text-align: right; font-weight: 600; font-size: 14px; color: #6b7280; }}
+.stat-count {{ width: 40px; text-align: right; font-weight: 600; font-size: 14px; color: #6b7280; flex-shrink: 0; }}
 
 /* Category */
 .category-section {{ margin-bottom: 24px; }}
 .category-title {{
     font-size: 18px; font-weight: 700; margin-bottom: 12px;
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center;
 }}
-.count-badge {{
+.category-title .count-badge {{
     background: #e5e7eb; color: #374151; font-size: 12px;
-    padding: 2px 10px; border-radius: 10px; font-weight: 500;
+    padding: 2px 10px; border-radius: 10px; font-weight: 500; margin-left: 8px;
 }}
 
 /* Card Grid */
@@ -382,52 +383,59 @@ body {{
 }}
 .article-card:hover {{ box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-1px); }}
 
-.article-header {{ display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; }}
-.score-badge {{
+.article-header {{ margin-bottom: 6px; font-size: 12px; }}
+.article-header .score-badge {{
     display: inline-block; padding: 1px 8px; border-radius: 4px;
-    color: white; font-weight: 700; font-size: 11px;
+    color: white; font-weight: 700; font-size: 11px; margin-right: 6px;
 }}
-.source {{ color: #6b7280; }}
-.date {{ color: #9ca3af; margin-left: auto; }}
+.article-header .source {{ color: #6b7280; margin-right: 6px; }}
+.article-header .date {{ color: #9ca3af; }}
 
 .article-title {{
     display: block; font-size: 16px; font-weight: 600; color: #1a1a2e;
     text-decoration: none; margin-bottom: 6px; line-height: 1.4;
+    overflow-wrap: break-word; word-break: break-all;
 }}
 .article-title:hover {{ color: #3b82f6; }}
 
 .article-tldr {{
     font-size: 13px; color: #1a1a2e; font-weight: 500; margin-bottom: 6px;
     padding: 4px 8px; background: #fef9c3; border-radius: 4px; display: inline-block;
+    overflow-wrap: break-word; word-break: break-all;
 }}
 
-.article-summary {{ font-size: 14px; color: #6b7280; margin-bottom: 8px; }}
+.article-summary {{ font-size: 14px; color: #6b7280; margin-bottom: 8px; overflow-wrap: break-word; word-break: break-all; }}
 
-.article-tags {{ display: flex; gap: 6px; flex-wrap: wrap; }}
-.tag {{
+.article-tags {{
+    font-size: 0;
+}}
+.article-tags .tag {{
     background: #f3f4f6; color: #374151; font-size: 11px;
-    padding: 2px 8px; border-radius: 4px;
+    padding: 2px 8px; border-radius: 4px; display: inline-block; margin-right: 6px; margin-bottom: 4px;
 }}
 
 /* Top Picks */
 .top-pick {{
-    display: flex; align-items: flex-start; gap: 12px; padding: 10px 0;
+    display: flex; align-items: flex-start; padding: 10px 0;
     border-bottom: 1px solid #f3f4f6;
 }}
 .top-pick:last-child {{ border-bottom: none; }}
 .top-rank {{
     font-size: 18px; font-weight: 800; color: #d1d5db; width: 32px; text-align: center; flex-shrink: 0; padding-top: 2px;
 }}
-.top-content {{
-    display: flex; align-items: center; gap: 10px; flex: 1;
+.top-content {{ flex: 1; }}
+.top-content .score-badge {{
+    display: inline-block; padding: 1px 8px; border-radius: 4px;
+    color: white; font-weight: 700; font-size: 11px; margin-right: 6px; vertical-align: middle;
 }}
 .top-title {{
     font-size: 14px; font-weight: 600; color: #1a1a2e;
-    text-decoration: none; flex: 1;
+    text-decoration: none; overflow-wrap: break-word; word-break: break-all;
 }}
 .top-title:hover {{ color: #3b82f6; }}
 .top-tldr {{
-    font-size: 12px; color: #6b7280; margin-left: 44px; padding: 2px 0 0 4px;
+    font-size: 12px; color: #6b7280; margin-left: 32px; padding: 2px 0 0 4px;
+    overflow-wrap: break-word; word-break: break-all;
 }}
 
 /* Footer */
@@ -441,18 +449,17 @@ body {{
     .header {{ padding: 16px; }}
     .header h1 {{ font-size: 18px; }}
     .header .subtitle {{ font-size: 12px; }}
-    .header .stats-row {{ gap: 6px; margin-top: 12px; }}
-    .header .stat-box {{ padding: 6px 8px; min-width: 0; flex: 1; }}
+    .header .stats-row {{ margin-top: 12px; }}
+    .header .stat-box {{ padding: 6px 8px; margin-right: 6px; margin-bottom: 4px; min-width: 0; flex: 1; }}
     .header .stat-box .num {{ font-size: 16px; }}
     .header .stat-box .label {{ font-size: 10px; }}
     .stat-label {{ width: 60px; font-size: 11px; }}
-    .stat-bar-bg {{ height: 6px; }}
+    .stat-bar-bg {{ height: 6px; margin: 0 6px; }}
     .stat-count {{ font-size: 11px; width: 24px; }}
 
     /* ===== Top Picks: 完全纵向堆叠 ===== */
     .top-pick {{
         flex-direction: column;
-        gap: 4px;
         padding: 10px 0;
     }}
     .top-rank {{
@@ -462,47 +469,35 @@ body {{
         text-align: left;
         padding-top: 0;
     }}
-    .top-content {{
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
+    .top-content .score-badge {{
+        margin-bottom: 4px;
     }}
     .top-title {{
         font-size: 14px;
         line-height: 1.5;
-        word-break: break-word;
     }}
     .top-tldr {{
         margin-left: 0;
         font-size: 12px;
         line-height: 1.4;
-        word-break: break-word;
     }}
 
     /* ===== 文章卡片: 紧凑 + 防溢出 ===== */
     .article-card {{ padding: 10px 12px; }}
-    .article-header {{
-        flex-wrap: wrap;
-        gap: 4px 6px;
-    }}
     .article-header .date {{
-        margin-left: 0;
         font-size: 11px;
         color: #9ca3af;
     }}
     .article-title {{
         font-size: 14px;
-        word-break: break-word;
     }}
     .article-tldr {{
         font-size: 12px;
         white-space: normal;
-        word-break: break-word;
         display: block;
     }}
     .article-summary {{
         font-size: 13px;
-        word-break: break-word;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
@@ -516,7 +511,7 @@ body {{
 
     /* 统计区 */
     .stats-section {{ padding: 14px; margin-bottom: 14px; }}
-    .stat-row {{ gap: 6px; margin-bottom: 6px; }}
+    .stat-row {{ margin-bottom: 6px; }}
 
     /* Footer */
     .footer {{ font-size: 11px; padding: 16px 0; margin-top: 16px; }}
