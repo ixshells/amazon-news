@@ -326,6 +326,7 @@ class NewsReporter:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generation-date" content="{now_str}">
 <title>亚马逊情报日报</title>
 <style>
 * {{ margin: 0; padding: 0; box-sizing: border-box; }}
@@ -436,10 +437,89 @@ body {{
 }}
 
 @media (max-width: 640px) {{
-    .container {{ padding: 12px; }}
-    .header {{ padding: 20px; }}
-    .header h1 {{ font-size: 20px; }}
-    .stat-label {{ width: 80px; font-size: 12px; }}
+    .container {{ padding: 10px; }}
+    .header {{ padding: 16px; }}
+    .header h1 {{ font-size: 18px; }}
+    .header .subtitle {{ font-size: 12px; }}
+    .header .stats-row {{ gap: 6px; margin-top: 12px; }}
+    .header .stat-box {{ padding: 6px 8px; min-width: 0; flex: 1; }}
+    .header .stat-box .num {{ font-size: 16px; }}
+    .header .stat-box .label {{ font-size: 10px; }}
+    .stat-label {{ width: 60px; font-size: 11px; }}
+    .stat-bar-bg {{ height: 6px; }}
+    .stat-count {{ font-size: 11px; width: 24px; }}
+
+    /* ===== Top Picks: 完全纵向堆叠 ===== */
+    .top-pick {{
+        flex-direction: column;
+        gap: 4px;
+        padding: 10px 0;
+    }}
+    .top-rank {{
+        font-size: 12px;
+        width: auto;
+        color: #9ca3af;
+        text-align: left;
+        padding-top: 0;
+    }}
+    .top-content {{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }}
+    .top-title {{
+        font-size: 14px;
+        line-height: 1.5;
+        word-break: break-word;
+    }}
+    .top-tldr {{
+        margin-left: 0;
+        font-size: 12px;
+        line-height: 1.4;
+        word-break: break-word;
+    }}
+
+    /* ===== 文章卡片: 紧凑 + 防溢出 ===== */
+    .article-card {{ padding: 10px 12px; }}
+    .article-header {{
+        flex-wrap: wrap;
+        gap: 4px 6px;
+    }}
+    .article-header .date {{
+        margin-left: 0;
+        font-size: 11px;
+        color: #9ca3af;
+    }}
+    .article-title {{
+        font-size: 14px;
+        word-break: break-word;
+    }}
+    .article-tldr {{
+        font-size: 12px;
+        white-space: normal;
+        word-break: break-word;
+        display: block;
+    }}
+    .article-summary {{
+        font-size: 13px;
+        word-break: break-word;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }}
+
+    /* 分类标题紧凑 */
+    .category-section {{ margin-bottom: 16px; }}
+    .category-title {{ font-size: 15px; margin-bottom: 8px; }}
+    .card-grid {{ gap: 8px; }}
+
+    /* 统计区 */
+    .stats-section {{ padding: 14px; margin-bottom: 14px; }}
+    .stat-row {{ gap: 6px; margin-bottom: 6px; }}
+
+    /* Footer */
+    .footer {{ font-size: 11px; padding: 16px 0; margin-top: 16px; }}
 }}
 </style>
 </head>

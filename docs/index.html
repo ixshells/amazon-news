@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>亚马逊情报中心</title>
+<meta http-equiv="refresh" content="3; url=./report-daily.html">
+<title>亚马逊</title>情报中心</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -20,6 +21,13 @@ body {
 .header h1 { font-size: 28px; margin-bottom: 8px; }
 .header p { color: #a0aec0; font-size: 14px; }
 
+.auto-redirect-banner {
+    background: #dbeafe; border-radius: 12px; padding: 16px 24px;
+    margin-bottom: 24px; text-align: center; font-size: 14px; color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+.auto-redirect-banner a { color: #1d4ed8; font-weight: 600; }
+
 .card {
     background: white; border-radius: 12px; padding: 20px 24px;
     margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
@@ -27,15 +35,21 @@ body {
 }
 .card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-.card h2 { font-size: 18px; margin-bottom: 8px; }
+.card h2 { font-size: 18px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 .card .meta { color: #9ca3af; font-size: 13px; margin-bottom: 6px; }
 .card .desc { color: #6b7280; font-size: 14px; line-height: 1.6; }
 .card .btn {
     display: inline-block; margin-top: 12px;
-    background: #3b82f6; color: white; padding: 8px 20px;
+    background: #3b82f6; color: white; padding: 10px 24px;
     border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500;
 }
 .card .btn:hover { background: #2563eb; }
+.btn-sm {
+    display: inline-block;
+    background: #f3f4f6; color: #374151; padding: 6px 14px;
+    border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 500;
+}
+.btn-sm:hover { background: #e5e7eb; }
 
 .status-bar {
     display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
@@ -48,10 +62,21 @@ body {
 .status-item .num { font-size: 28px; font-weight: 700; color: #1a1a2e; }
 .status-item .label { font-size: 12px; color: #9ca3af; }
 
+.history-list { list-style: none; padding: 0; }
+.history-list li {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 0; border-bottom: 1px solid #f3f4f6;
+}
+.history-list li:last-child { border-bottom: none; }
+.history-list .date { font-size: 14px; color: #374151; font-weight: 500; }
+.history-list .weekday { font-size: 12px; color: #9ca3af; margin-left: 6px; }
+.history-empty { color: #9ca3af; font-size: 14px; text-align: center; padding: 24px; }
+
 .footer {
     text-align: center; color: #9ca3af; font-size: 12px;
     padding: 24px 0; margin-top: 32px; border-top: 1px solid #e5e7eb;
 }
+.footer a { color: #6b7280; }
 
 @media (max-width: 640px) {
     .container { padding: 12px; }
@@ -64,8 +89,13 @@ body {
 <div class="container">
 
 <div class="header">
-    <h1>📰 亚马逊情报中心</h1>
-    <p>AI 自动采集 · 智能分类 · 每日更新</p>
+    <h1>📰 </h1>亚马逊情报中心</h1>
+    <p>AI</p> 自动采集 · 智能分类 · 每日更新</p>
+</div>
+
+<div class="auto-redirect-banner">
+    ⏩ 即将跳转至最新日报 ·
+    <a href="./report-daily.html">立即查看 →</a>
 </div>
 
 <div class="status-bar">
@@ -83,22 +113,33 @@ body {
     </div>
 </div>
 
-<div id="reports-list">
+<!-- 最新日报卡片 -->
+<div id="latest-report">
     <div class="card" id="loading-card">
         <p style="color:#9ca3af;">加载中...</p>
     </div>
 </div>
 
+<!-- 历史存档 -->
+<div class="card">
+    <h2></h2>📚 历史存档</h2>
+    <div class="meta">过往日报，点击可查看历史记录</div>
+    <ul class="history-list" id="history-list">
+        <li class="history-empty">加载中...</li>
+    </ul>
+</div>
+
 <div class="footer">
-    由 Amazon News Agent 自动生成 · <a href="https://github.com/ixshells/amazon" style="color:#6b7280;">GitHub</a>
+    由 Amazon News Agent 自动生成 ·
+    <a href="https://github.com/ixshells/amazon">GitHub</a>
 </div>
 
 </div>
 
 <script>
-async function loadData() {
+// 提取报告中的统计数据（从 report-daily.html）
+async function loadLatestReport() {
     try {
-        // 尝试获取最新报告中的统计数据
         const resp = await fetch('./report-daily.html');
         const html = await resp.text();
 
@@ -108,23 +149,23 @@ async function loadData() {
         document.getElementById('total-articles').textContent = total;
 
         // 解析高分文章
-        const highMatch = html.match(/高分文章[^\\d]*(\\d+)/);
+        const highMatch = html.match(/<div class="num">(\d+)<\/div><div class="label">高分文章<\/div>/);
         if (highMatch) {
             document.getElementById('high-score').textContent = highMatch[1];
         }
 
         // 解析信息来源
-        const srcMatch = html.match(/信息来源[^\\d]*(\\d+)/);
+        const srcMatch = html.match(/<div class="num">(\d+)<\/div><div class="label">信息来源<\/div>/);
         if (srcMatch) {
             document.getElementById('sources').textContent = srcMatch[1];
         }
 
-        // 获取更新日期
-        const dateMatch = html.match(/生成时间: ([^<]+)/);
-        const updateDate = dateMatch ? dateMatch[1] : '今天';
+        // 获取生成日期
+        const dateMatch = html.match(/生成时间: ([^<｜]+)/);
+        const updateDate = dateMatch ? dateMatch[1].trim() : '今天';
 
-        // 获取 Top 5 文章（从报告里提取）
-        const topSection = html.match(/今日必读 Top 5([\\s\\S]*?)<div class="stats-section"/);
+        // 获取 Top 5 文章
+        const topSection = html.match(/今日必读 Top 5([\s\S]*?)<div class="stats-section"/);
         let topArticles = [];
         if (topSection) {
             const titleRegex = /<a[^>]*class="top-title"[^>]*>([^<]+)<\/a>/g;
@@ -134,7 +175,7 @@ async function loadData() {
             }
         }
 
-        // 渲染报告列表
+        // 渲染最新报告卡片
         const reportsHtml = `
             <div class="card">
                 <h2>📄 最新日报</h2>
@@ -154,7 +195,7 @@ async function loadData() {
                 <a class="btn" href="./report-daily.html">📖 阅读完整报告 →</a>
             </div>
         `;
-        document.getElementById('reports-list').innerHTML = reportsHtml;
+        document.getElementById('latest-report').innerHTML = reportsHtml;
 
     } catch(e) {
         document.getElementById('loading-card').innerHTML = `
@@ -163,7 +204,43 @@ async function loadData() {
         console.error(e);
     }
 }
-loadData();
+
+// 加载历史存档列表
+async function loadHistory() {
+    try {
+        const resp = await fetch('./reports.json');
+        const data = await resp.json();
+
+        const list = document.getElementById('history-list');
+        if (!data.reports || data.reports.length === 0) {
+            list.innerHTML = '<li class="history-empty">暂无历史存档</li>';
+            return;
+        }
+
+        const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+        list.innerHTML = data.reports.map(r => {
+            const date = new Date(r.date);
+            const weekday = weekdays[date.getDay()];
+            const label = date.toISOString ? date.toISOString().slice(0, 10) : r.date;
+            return `
+                <li>
+                    <span>
+                        <span class="date">${r.date}</span>
+                        <span class="weekday">${weekday}</span>
+                    </span>
+                    <a class="btn-sm" href="./reports/${r.date}.html">查看 →</a>
+                </li>
+            `;
+        }).join('');
+    } catch(e) {
+        document.getElementById('history-list').innerHTML =
+            '<li class="history-empty">暂无历史存档</li>';
+        console.error(e);
+    }
+}
+
+loadLatestReport();
+loadHistory();
 </script>
 </body>
 </html>

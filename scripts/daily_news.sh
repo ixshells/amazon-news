@@ -43,10 +43,45 @@ log "📄  阶段 3/3: 生成 HTML 报告..."
 
 # 4. 发布到 GitHub Pages（docs/ 目录）
 log "🚀  阶段 4/4: 发布到 GitHub Pages..."
+
+# ---- 4a. 存档旧报告 ----
+ARCHIVE_DIR="${PROJECT_DIR}/docs/reports"
+mkdir -p "$ARCHIVE_DIR"
+if [ -f "${PROJECT_DIR}/docs/report-daily.html" ]; then
+    # 从旧报告中提取生成日期（使用 meta 标签，更可靠）
+    ARCHIVE_DATE=$(grep -oP '<meta name="generation-date" content="\K\d{4}-\d{2}-\d{2}' "${PROJECT_DIR}/docs/report-daily.html" || echo "")
+    if [ -n "$ARCHIVE_DATE" ]; then
+        # 避免重复归档（如果当天已运行过）
+        if [ ! -f "${ARCHIVE_DIR}/${ARCHIVE_DATE}.html" ]; then
+            cp "${PROJECT_DIR}/docs/report-daily.html" "${ARCHIVE_DIR}/${ARCHIVE_DATE}.html"
+            log "📦 已归档旧报告: ${ARCHIVE_DATE}.html"
+        else
+            log "⏭️  今日已归档，跳过重复归档"
+        fi
+    else
+        log "⚠️  无法提取旧报告日期，跳过归档"
+    fi
+fi
+
+# ---- 4b. 复制新报告 ----
 cp "$REPORT_FILE" "${PROJECT_DIR}/docs/report-daily.html"
+
+# ---- 4c. 生成 reports.json（首页历史列表用）----
+/usr/bin/python3 -c "
+import json, glob, os
+reports_dir = '${ARCHIVE_DIR}'
+files = sorted(
+    [{'date': os.path.basename(f).replace('.html', '')} for f in glob.glob(os.path.join(reports_dir, '*.html'))],
+    key=lambda x: x['date'],
+    reverse=True
+)
+with open(os.path.join('${PROJECT_DIR}/docs', 'reports.json'), 'w') as f:
+    json.dump({'reports': files}, f, ensure_ascii=False)
+" 2>&1 | tee -a "$LOG_FILE"
+
 cd "$PROJECT_DIR"
 
-git add docs/report-daily.html docs/index.html 2>&1 | tee -a "$LOG_FILE"
+git add docs/report-daily.html docs/index.html docs/reports.json docs/reports/ 2>&1 | tee -a "$LOG_FILE"
 
 # 检查是否有新文章（有变化才提交）
 if git diff --cached --quiet; then
