@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>亚马逊情报中心</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #f0f2f5; color: #1a1a2e;
+}
+.container { max-width: 720px; margin: 0 auto; padding: 20px; }
+
+.header {
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    color: white; border-radius: 16px; padding: 32px; margin-bottom: 24px;
+    text-align: center;
+}
+.header h1 { font-size: 28px; margin-bottom: 8px; }
+.header p { color: #a0aec0; font-size: 14px; }
+
+.card {
+    background: white; border-radius: 12px; padding: 20px 24px;
+    margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transition: transform 0.2s;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+.card h2 { font-size: 18px; margin-bottom: 8px; }
+.card .meta { color: #9ca3af; font-size: 13px; margin-bottom: 6px; }
+.card .desc { color: #6b7280; font-size: 14px; line-height: 1.6; }
+.card .btn {
+    display: inline-block; margin-top: 12px;
+    background: #3b82f6; color: white; padding: 8px 20px;
+    border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500;
+}
+.card .btn:hover { background: #2563eb; }
+
+.status-bar {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+.status-item {
+    background: white; border-radius: 12px; padding: 16px 24px;
+    text-align: center; min-width: 100px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.status-item .num { font-size: 28px; font-weight: 700; color: #1a1a2e; }
+.status-item .label { font-size: 12px; color: #9ca3af; }
+
+.footer {
+    text-align: center; color: #9ca3af; font-size: 12px;
+    padding: 24px 0; margin-top: 32px; border-top: 1px solid #e5e7eb;
+}
+
+@media (max-width: 640px) {
+    .container { padding: 12px; }
+    .header { padding: 24px 16px; }
+    .header h1 { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+    <h1>📰 亚马逊情报中心</h1>
+    <p>AI 自动采集 · 智能分类 · 每日更新</p>
+</div>
+
+<div class="status-bar">
+    <div class="status-item">
+        <div class="num" id="total-articles">-</div>
+        <div class="label">文章总数</div>
+    </div>
+    <div class="status-item">
+        <div class="num" id="high-score">-</div>
+        <div class="label">高分必读</div>
+    </div>
+    <div class="status-item">
+        <div class="num" id="sources">-</div>
+        <div class="label">信息来源</div>
+    </div>
+</div>
+
+<div id="reports-list">
+    <div class="card" id="loading-card">
+        <p style="color:#9ca3af;">加载中...</p>
+    </div>
+</div>
+
+<div class="footer">
+    由 Amazon News Agent 自动生成 · <a href="https://github.com/ixshells/amazon" style="color:#6b7280;">GitHub</a>
+</div>
+
+</div>
+
+<script>
+async function loadData() {
+    try {
+        // 尝试获取最新报告中的统计数据
+        const resp = await fetch('./report-daily.html');
+        const html = await resp.text();
+
+        // 解析文章总数
+        const totalMatch = html.match(/共 (\d+) 篇文章/);
+        const total = totalMatch ? totalMatch[1] : '?';
+        document.getElementById('total-articles').textContent = total;
+
+        // 解析高分文章
+        const highMatch = html.match(/高分文章[^\\d]*(\\d+)/);
+        if (highMatch) {
+            document.getElementById('high-score').textContent = highMatch[1];
+        }
+
+        // 解析信息来源
+        const srcMatch = html.match(/信息来源[^\\d]*(\\d+)/);
+        if (srcMatch) {
+            document.getElementById('sources').textContent = srcMatch[1];
+        }
+
+        // 获取更新日期
+        const dateMatch = html.match(/生成时间: ([^<]+)/);
+        const updateDate = dateMatch ? dateMatch[1] : '今天';
+
+        // 获取 Top 5 文章（从报告里提取）
+        const topSection = html.match(/今日必读 Top 5([\\s\\S]*?)<div class="stats-section"/);
+        let topArticles = [];
+        if (topSection) {
+            const titleRegex = /<a[^>]*class="top-title"[^>]*>([^<]+)<\/a>/g;
+            let m;
+            while ((m = titleRegex.exec(topSection[1])) !== null) {
+                topArticles.push(m[1].trim());
+            }
+        }
+
+        // 渲染报告列表
+        const reportsHtml = `
+            <div class="card">
+                <h2>📄 最新日报</h2>
+                <div class="meta">${updateDate} · ${total} 篇文章</div>
+                <div class="desc">
+                    AI 从 AMZ123、卖家之家等来源自动采集新闻，
+                    通过 DeepSeek 智能分类评分，筛选出对亚马逊卖家最有价值的情报。
+                </div>
+                ${topArticles.length > 0 ? `
+                <div style="margin-top:12px;padding:12px;background:#f9fafb;border-radius:8px;">
+                    <p style="font-size:13px;color:#6b7280;margin-bottom:6px;">🏆 Top 5 精选：</p>
+                    <ol style="font-size:13px;color:#374151;padding-left:20px;">
+                        ${topArticles.slice(0,5).map(t => `<li style="margin-bottom:4px;">${t.substring(0,50)}</li>`).join('')}
+                    </ol>
+                </div>
+                ` : ''}
+                <a class="btn" href="./report-daily.html">📖 阅读完整报告 →</a>
+            </div>
+        `;
+        document.getElementById('reports-list').innerHTML = reportsHtml;
+
+    } catch(e) {
+        document.getElementById('loading-card').innerHTML = `
+            <p style="color:#6b7280;">暂无报告数据，等待首次自动运行完成</p>
+        `;
+        console.error(e);
+    }
+}
+loadData();
+</script>
+</body>
+</html>
