@@ -40,7 +40,7 @@ log "🤖  阶段 2/3: AI 分析..."
 
 # 3. 生成 HTML 报告
 log "📄  阶段 3/3: 生成 HTML 报告..."
-/usr/bin/python3 -m news_agent.main export -o "$REPORT_FILE" -f html -d 1 2>&1 | tee -a "$LOG_FILE"
+/usr/bin/python3 -m news_agent.main export -o "$REPORT_FILE" -f html -d 5 2>&1 | tee -a "$LOG_FILE"
 
 # 4. 发布到 GitHub Pages（docs/ 目录）
 log "🚀  阶段 4/4: 发布到 GitHub Pages..."

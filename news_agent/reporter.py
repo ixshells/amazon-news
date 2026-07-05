@@ -553,6 +553,7 @@ body {{
     .archive-section h3 {{ font-size: 15px; margin-bottom: 12px; }}
     .archive-list li {{ padding: 8px 0; }}
     .archive-list .archive-date {{ font-size: 13px; }}
+    .archive-list li[style*="background:#f0f5ff"] {{ padding: 8px 10px !important; }}
 
     /* Footer */
     .footer {{ font-size: 11px; padding: 16px 0; margin-top: 16px; }}
@@ -600,36 +601,62 @@ async function loadArchive() {{
         const resp = await fetch('./reports.json');
         const data = await resp.json();
 
+        const section = document.getElementById('archive-section');
         const list = document.getElementById('archive-list');
-        if (!data.reports || data.reports.length === 0) {{
-            list.innerHTML = '<li class="archive-empty">暂无历史存档</li>';
-            document.getElementById('archive-section').style.display = 'none';
-            return;
-        }}
 
         // 从页面中获取当前报告的日期
         const metaTag = document.querySelector('meta[name="generation-date"]');
         const currentDate = metaTag ? metaTag.getAttribute('content').slice(0, 10) : '';
 
+        if (!data.reports || data.reports.length === 0) {{
+            section.style.display = 'none';
+            return;
+        }}
+
         const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-        list.innerHTML = data.reports.map(r => {{
-            const isCurrent = (r.date === currentDate);
+
+        // 分离当前报告和历史报告
+        const current = data.reports.filter(r => r.date === currentDate);
+        const past = data.reports.filter(r => r.date !== currentDate);
+
+        if (past.length === 0) {{
+            // 只有当前报告，没有历史 => 缩略显示
+            list.innerHTML = `
+                <li class="archive-empty" style="color:#6b7280;font-size:13px;">
+                    📌 当前报告：${{currentDate}}（${{weekdays[new Date(currentDate + 'T00:00:00').getDay()] || ''}}）
+                    — 每日自动运行后，历史报告将在此显示
+                </li>`;
+            return;
+        }}
+
+        // 先显示当前报告（如果存在），再显示历史
+        let html = '';
+        if (current.length > 0) {{
+            html += `
+                <li style="background:#f0f5ff;border-radius:8px;padding:10px 12px;margin-bottom:8px;border-bottom:none;">
+                    <span>
+                        <span class="archive-date" style="color:#3b82f6;">${{current[0].date}}</span>
+                        <span class="archive-weekday">${{weekdays[new Date(current[0].date + 'T00:00:00').getDay()] || ''}}</span>
+                        <span class="archive-current">👈 当前</span>
+                    </span>
+                    <span class="archive-link" style="background:#dbeafe;color:#1e40af;cursor:default;font-size:12px;font-weight:500;padding:4px 12px;border-radius:6px;">📄 最新</span>
+                </li>`;
+        }}
+
+        html += past.map(r => {{
             const d = new Date(r.date + 'T00:00:00');
             const weekday = weekdays[d.getDay()] || '';
-            const href = isCurrent ? '' : './reports/' + r.date + '.html';
             return `
                 <li>
                     <span>
                         <span class="archive-date">${{r.date}}</span>
                         <span class="archive-weekday">${{weekday}}</span>
-                        ${{isCurrent ? '<span class="archive-current">👈 当前</span>' : ''}}
                     </span>
-                    <a class="archive-link" href="${{href}}" ${{isCurrent ? 'style="background:#dbeafe;color:#1e40af;cursor:default;"' : ''}}>
-                        ${{isCurrent ? '📄 最新' : '查看 →'}}
-                    </a>
-                </li>
-            `;
+                    <a class="archive-link" href="./reports/${{r.date}}.html">查看 →</a>
+                </li>`;
         }}).join('');
+
+        list.innerHTML = html;
     }} catch(e) {{
         document.getElementById('archive-section').style.display = 'none';
         console.log('存档加载跳过:', e.message);
