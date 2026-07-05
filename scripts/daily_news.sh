@@ -6,6 +6,7 @@
 #   1. 爬取最新新闻
 #   2. AI 分析分类
 #   3. 生成 HTML 报告
+#   4. 存档旧报告 + 发布到 GitHub Pages
 # ============================================================
 
 # 项目路径
@@ -48,8 +49,13 @@ log "🚀  阶段 4/4: 发布到 GitHub Pages..."
 ARCHIVE_DIR="${PROJECT_DIR}/docs/reports"
 mkdir -p "$ARCHIVE_DIR"
 if [ -f "${PROJECT_DIR}/docs/report-daily.html" ]; then
-    # 从旧报告中提取生成日期（使用 meta 标签，更可靠）
-    ARCHIVE_DATE=$(grep -oP '<meta name="generation-date" content="\K\d{4}-\d{2}-\d{2}' "${PROJECT_DIR}/docs/report-daily.html" || echo "")
+    # 从旧报告中提取生成日期
+    ARCHIVE_DATE=$(/usr/bin/python3 -c "
+import re
+with open('${PROJECT_DIR}/docs/report-daily.html') as f:
+    m = re.search(r'generation-date\" content=\"(\d{4}-\d{2}-\d{2})', f.read())
+    print(m.group(1) if m else '')
+" 2>/dev/null)
     if [ -n "$ARCHIVE_DATE" ]; then
         # 避免重复归档（如果当天已运行过）
         if [ ! -f "${ARCHIVE_DIR}/${ARCHIVE_DATE}.html" ]; then
@@ -66,7 +72,7 @@ fi
 # ---- 4b. 复制新报告 ----
 cp "$REPORT_FILE" "${PROJECT_DIR}/docs/report-daily.html"
 
-# ---- 4c. 生成 reports.json（首页历史列表用）----
+# ---- 4c. 生成 reports.json（历史列表用）----
 /usr/bin/python3 -c "
 import json, glob, os
 reports_dir = '${ARCHIVE_DIR}'

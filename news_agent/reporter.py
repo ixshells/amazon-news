@@ -438,6 +438,41 @@ body {{
     overflow-wrap: break-word; word-break: break-all;
 }}
 
+/* History Archive */
+.archive-section {{
+    background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}}
+.archive-section h3 {{
+    font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #1a1a2e;
+}}
+.archive-list {{ list-style: none; padding: 0; }}
+.archive-list li {{
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid #f3f4f6;
+}}
+.archive-list li:last-child {{ border-bottom: none; }}
+.archive-list .archive-date {{
+    font-size: 14px; color: #374151; font-weight: 500;
+}}
+.archive-list .archive-weekday {{
+    font-size: 12px; color: #9ca3af; margin-left: 6px;
+}}
+.archive-list .archive-current {{
+    color: #3b82f6; font-size: 12px; font-weight: 500; margin-left: 8px;
+}}
+.archive-link {{
+    display: inline-block; background: #f3f4f6; color: #374151; padding: 4px 12px;
+    border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 500;
+}}
+.archive-link:hover {{ background: #e5e7eb; }}
+.archive-link[href=""] {{
+    background: #dbeafe; color: #1e40af; cursor: default;
+}}
+.archive-empty {{
+    color: #9ca3af; font-size: 14px; text-align: center; padding: 16px;
+}}
+
 /* Footer */
 .footer {{
     text-align: center; color: #9ca3af; font-size: 12px;
@@ -513,6 +548,12 @@ body {{
     .stats-section {{ padding: 14px; margin-bottom: 14px; }}
     .stat-row {{ margin-bottom: 6px; }}
 
+    /* History */
+    .archive-section {{ padding: 16px; margin-bottom: 16px; }}
+    .archive-section h3 {{ font-size: 15px; margin-bottom: 12px; }}
+    .archive-list li {{ padding: 8px 0; }}
+    .archive-list .archive-date {{ font-size: 13px; }}
+
     /* Footer */
     .footer {{ font-size: 11px; padding: 16px 0; margin-top: 16px; }}
 }}
@@ -538,11 +579,64 @@ body {{
 
 {sections_html}
 
+<!-- 历史存档 -->
+<div class="archive-section" id="archive-section">
+    <h3>📚 历史存档</h3>
+    <ul class="archive-list" id="archive-list">
+        <li class="archive-empty">加载中...</li>
+    </ul>
+</div>
+
 <div class="footer">
     由 Amazon News Agent 自动生成 ｜ <a href="https://github.com/" style="color:#6b7280;">GitHub</a>
 </div>
 
 </div>
+
+<script>
+// 加载历史存档列表
+async function loadArchive() {{
+    try {{
+        const resp = await fetch('./reports.json');
+        const data = await resp.json();
+
+        const list = document.getElementById('archive-list');
+        if (!data.reports || data.reports.length === 0) {{
+            list.innerHTML = '<li class="archive-empty">暂无历史存档</li>';
+            document.getElementById('archive-section').style.display = 'none';
+            return;
+        }}
+
+        // 从页面中获取当前报告的日期
+        const metaTag = document.querySelector('meta[name="generation-date"]');
+        const currentDate = metaTag ? metaTag.getAttribute('content').slice(0, 10) : '';
+
+        const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+        list.innerHTML = data.reports.map(r => {{
+            const isCurrent = (r.date === currentDate);
+            const d = new Date(r.date + 'T00:00:00');
+            const weekday = weekdays[d.getDay()] || '';
+            const href = isCurrent ? '' : './reports/' + r.date + '.html';
+            return `
+                <li>
+                    <span>
+                        <span class="archive-date">${{r.date}}</span>
+                        <span class="archive-weekday">${{weekday}}</span>
+                        ${{isCurrent ? '<span class="archive-current">👈 当前</span>' : ''}}
+                    </span>
+                    <a class="archive-link" href="${{href}}" ${{isCurrent ? 'style="background:#dbeafe;color:#1e40af;cursor:default;"' : ''}}>
+                        ${{isCurrent ? '📄 最新' : '查看 →'}}
+                    </a>
+                </li>
+            `;
+        }}).join('');
+    }} catch(e) {{
+        document.getElementById('archive-section').style.display = 'none';
+        console.log('存档加载跳过:', e.message);
+    }}
+}}
+loadArchive();
+</script>
 </body>
 </html>"""
 
