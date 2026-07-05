@@ -110,13 +110,19 @@ class NewsCrawler:
                 logger.debug(f"   ⏭️ [{i}/{len(article_list)}] 已存在: {title[:40]}...")
                 continue
 
-            logger.info(f"   📥 [{i}/{len(article_list)}] 爬取: {title[:50]}...")
+            # 如果列表页没提供标题，日志里先显示 URL 尾缀
+            log_title = title[:50] if title else article_url.split("/")[-1]
+            logger.info(f"   📥 [{i}/{len(article_list)}] 爬取: {log_title}")
 
             # 爬取正文
             content = parser.crawl_article(article_url)
             if not content or len(content) < 50:
                 logger.warning(f"   ⚠️  正文过短或为空，跳过")
                 continue
+
+            # 如果详情页提取到了标题，用它覆盖列表页的占位标题
+            if hasattr(parser, "_last_title") and parser._last_title:
+                title = parser._last_title
 
             # 构建文章对象
             article = Article(
