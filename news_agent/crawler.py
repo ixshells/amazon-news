@@ -18,11 +18,13 @@ from news_agent.config import Config
 from news_agent.models import Article, init_db, save_article
 from news_agent.sources.amz123 import AMZ123Parser
 from news_agent.sources.mjzj import MJZJParser
+from news_agent.sources.upkuajing import UpKuajingParser
 
 # 解析器注册表
 PARSER_REGISTRY = {
     "amz123": AMZ123Parser,
     "mjzj": MJZJParser,
+    "upkuajing": UpKuajingParser,
 }
 
 

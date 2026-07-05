@@ -58,6 +58,9 @@ class Config:
     ENABLE_MJZJ = os.getenv("ENABLE_MJZJ", "true").lower() == "true"  # 卖家之家
     ENABLE_IKJZD = os.getenv("ENABLE_IKJZD", "true").lower() == "true"  # 跨境知道
     ENABLE_WEARESELLERS = os.getenv("ENABLE_WEARESELLERS", "false").lower() == "true"
+    ENABLE_UPKUAJING = (
+        os.getenv("ENABLE_UPKUAJING", "true").lower() == "true"
+    )  # 跨境魔方
 
     # ============================================================
     # 新闻来源列表
@@ -82,5 +85,10 @@ class Config:
             "name": "知无不言",
             "enabled": ENABLE_WEARESELLERS,
             "url": "https://www.wearesellers.com/",
+        },
+        "upkuajing": {
+            "name": "跨境魔方",
+            "enabled": ENABLE_UPKUAJING,
+            "url": "https://www.upkuajing.com/blog",
         },
     }
