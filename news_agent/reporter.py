@@ -112,7 +112,7 @@ class NewsReporter:
         """导出为 Markdown 报告"""
         from news_agent.models import get_all_articles
 
-        articles = get_all_articles(limit=500)
+        articles = get_all_articles(limit=2000)
         if not articles:
             return "# 暂无文章\n"
 
@@ -177,7 +177,7 @@ class NewsReporter:
         """导出为 HTML 报告（带样式）"""
         from news_agent.models import get_all_articles
 
-        articles = get_all_articles(limit=500)
+        articles = get_all_articles(limit=2000)
         if not articles:
             html = "<html><body><h1>暂无文章</h1></body></html>"
             if filepath:
@@ -300,7 +300,7 @@ class NewsReporter:
         for cat_key, cat_articles in by_cat.items():
             cards = "".join(
                 f'<div class="article-card"><a class="article-title" href="{a.url}">{a.title[:80]}</a></div>'
-                for a in cat_articles[:5]
+                for a in cat_articles[:50]
             )
             sections_html += f"""
             <div class="category-section">
