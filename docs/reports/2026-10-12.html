@@ -1,0 +1,2743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generation-date" content="2026-10-12 08:07">
+<title>亚马逊情报日报</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #f0f2f5; color: #1a1a2e; line-height: 1.6;
+}
+.container { max-width: 960px; margin: 0 auto; padding: 20px; }
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white; border-radius: 16px; padding: 32px; margin-bottom: 24px;
+}
+.header h1 { font-size: 24px; margin-bottom: 8px; }
+.header .subtitle { color: #a0aec0; font-size: 14px; }
+.header .stats-row { display: flex; margin-top: 16px; flex-wrap: wrap; }
+.header .stat-box {
+    background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 20px;
+    text-align: center; min-width: 80px; margin-right: 12px; margin-bottom: 6px;
+}
+.header .stat-box:last-child { margin-right: 0; }
+.header .stat-box .num { font-size: 24px; font-weight: 700; }
+.header .stat-box .label { font-size: 12px; color: #a0aec0; }
+
+/* Stats */
+.stats-section {
+    background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.stat-row { display: flex; align-items: center; margin-bottom: 8px; }
+.stat-label { width: 100px; font-size: 14px; flex-shrink: 0; }
+.stat-bar-bg { flex: 1; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin: 0 8px; }
+.stat-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #8b5cf6); border-radius: 4px; transition: width 0.6s; }
+.stat-count { width: 40px; text-align: right; font-weight: 600; font-size: 14px; color: #6b7280; flex-shrink: 0; }
+
+/* Category */
+.category-section { margin-bottom: 24px; }
+.category-title {
+    font-size: 18px; font-weight: 700; margin-bottom: 12px;
+    display: flex; align-items: center;
+}
+.category-title .count-badge {
+    background: #e5e7eb; color: #374151; font-size: 12px;
+    padding: 2px 10px; border-radius: 10px; font-weight: 500; margin-left: 8px;
+}
+
+/* Card Grid */
+.card-grid { display: grid; gap: 12px; }
+.article-card {
+    background: white; border-radius: 12px; padding: 16px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.article-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-1px); }
+
+.article-header { margin-bottom: 6px; font-size: 12px; }
+.article-header .score-badge {
+    display: inline-block; padding: 1px 8px; border-radius: 4px;
+    color: white; font-weight: 700; font-size: 11px; margin-right: 6px;
+}
+.article-header .source { color: #6b7280; margin-right: 6px; }
+.article-header .date { color: #9ca3af; }
+
+.article-title {
+    display: block; font-size: 16px; font-weight: 600; color: #1a1a2e;
+    text-decoration: none; margin-bottom: 6px; line-height: 1.4;
+    overflow-wrap: break-word; word-break: break-all;
+}
+.article-title:hover { color: #3b82f6; }
+
+.article-tldr {
+    font-size: 13px; color: #1a1a2e; font-weight: 500; margin-bottom: 6px;
+    padding: 4px 8px; background: #fef9c3; border-radius: 4px; display: inline-block;
+    overflow-wrap: break-word; word-break: break-all;
+}
+
+.article-summary { font-size: 14px; color: #6b7280; margin-bottom: 8px; overflow-wrap: break-word; word-break: break-all; }
+
+.article-tags {
+    font-size: 0;
+}
+.article-tags .tag {
+    background: #f3f4f6; color: #374151; font-size: 11px;
+    padding: 2px 8px; border-radius: 4px; display: inline-block; margin-right: 6px; margin-bottom: 4px;
+}
+
+/* Top Picks */
+.top-pick {
+    display: flex; align-items: flex-start; padding: 10px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+.top-pick:last-child { border-bottom: none; }
+.top-rank {
+    font-size: 18px; font-weight: 800; color: #d1d5db; width: 32px; text-align: center; flex-shrink: 0; padding-top: 2px;
+}
+.top-content { flex: 1; }
+.top-content .score-badge {
+    display: inline-block; padding: 1px 8px; border-radius: 4px;
+    color: white; font-weight: 700; font-size: 11px; margin-right: 6px; vertical-align: middle;
+}
+.top-title {
+    font-size: 14px; font-weight: 600; color: #1a1a2e;
+    text-decoration: none; overflow-wrap: break-word; word-break: break-all;
+}
+.top-title:hover { color: #3b82f6; }
+.top-tldr {
+    font-size: 12px; color: #6b7280; margin-left: 32px; padding: 2px 0 0 4px;
+    overflow-wrap: break-word; word-break: break-all;
+}
+
+/* History Archive */
+.archive-section {
+    background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.archive-section h3 {
+    font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #1a1a2e;
+}
+.archive-list { list-style: none; padding: 0; }
+.archive-list li {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid #f3f4f6;
+}
+.archive-list li:last-child { border-bottom: none; }
+.archive-list .archive-date {
+    font-size: 14px; color: #374151; font-weight: 500;
+}
+.archive-list .archive-weekday {
+    font-size: 12px; color: #9ca3af; margin-left: 6px;
+}
+.archive-list .archive-current {
+    color: #3b82f6; font-size: 12px; font-weight: 500; margin-left: 8px;
+}
+.archive-link {
+    display: inline-block; background: #f3f4f6; color: #374151; padding: 4px 12px;
+    border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 500;
+}
+.archive-link:hover { background: #e5e7eb; }
+.archive-link[href=""] {
+    background: #dbeafe; color: #1e40af; cursor: default;
+}
+.archive-empty {
+    color: #9ca3af; font-size: 14px; text-align: center; padding: 16px;
+}
+
+/* Footer */
+.footer {
+    text-align: center; color: #9ca3af; font-size: 12px;
+    padding: 24px 0; border-top: 1px solid #e5e7eb; margin-top: 32px;
+}
+
+@media (max-width: 640px) {
+    .container { padding: 10px; }
+    .header { padding: 16px; }
+    .header h1 { font-size: 18px; }
+    .header .subtitle { font-size: 12px; }
+    .header .stats-row { margin-top: 12px; }
+    .header .stat-box { padding: 6px 8px; margin-right: 6px; margin-bottom: 4px; min-width: 0; flex: 1; }
+    .header .stat-box .num { font-size: 16px; }
+    .header .stat-box .label { font-size: 10px; }
+    .stat-label { width: 60px; font-size: 11px; }
+    .stat-bar-bg { height: 6px; margin: 0 6px; }
+    .stat-count { font-size: 11px; width: 24px; }
+
+    /* ===== Top Picks: 完全纵向堆叠 ===== */
+    .top-pick {
+        flex-direction: column;
+        padding: 10px 0;
+    }
+    .top-rank {
+        font-size: 12px;
+        width: auto;
+        color: #9ca3af;
+        text-align: left;
+        padding-top: 0;
+    }
+    .top-content .score-badge {
+        margin-bottom: 4px;
+    }
+    .top-title {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    .top-tldr {
+        margin-left: 0;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    /* ===== 文章卡片: 紧凑 + 防溢出 ===== */
+    .article-card { padding: 10px 12px; }
+    .article-header .date {
+        font-size: 11px;
+        color: #9ca3af;
+    }
+    .article-title {
+        font-size: 14px;
+    }
+    .article-tldr {
+        font-size: 12px;
+        white-space: normal;
+        display: block;
+    }
+    .article-summary {
+        font-size: 13px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* 分类标题紧凑 */
+    .category-section { margin-bottom: 16px; }
+    .category-title { font-size: 15px; margin-bottom: 8px; }
+    .card-grid { gap: 8px; }
+
+    /* 统计区 */
+    .stats-section { padding: 14px; margin-bottom: 14px; }
+    .stat-row { margin-bottom: 6px; }
+
+    /* History */
+    .archive-section { padding: 16px; margin-bottom: 16px; }
+    .archive-section h3 { font-size: 15px; margin-bottom: 12px; }
+    .archive-list li { padding: 8px 0; }
+    .archive-list .archive-date { font-size: 13px; }
+    .archive-list li[style*="background:#f0f5ff"] { padding: 8px 10px !important; }
+
+    /* Footer */
+    .footer { font-size: 11px; padding: 16px 0; margin-top: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+    <h1>📰 亚马逊情报日报</h1>
+    <div class="subtitle">生成时间: 2026-10-12 08:07 ｜ 覆盖最近 8 天 ｜ 共 178 篇文章</div>
+    <div class="stats-row">
+        <div class="stat-box"><div class="num">178</div><div class="label">总文章</div></div>
+        <div class="stat-box"><div class="num">0</div><div class="label">高分文章</div></div>
+        <div class="stat-box"><div class="num">3</div><div class="label">信息来源</div></div>
+    </div>
+</div>
+
+<div class="stats-section">
+    <h3 style="margin-bottom:12px;font-size:14px;color:#6b7280;">📊 分类分布</h3>
+    
+            <div class="stat-row">
+                <span class="stat-label">📜 政策法规</span>
+                <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:219.6629213483146%"></div></div>
+                <span class="stat-count">391</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">🛒 平台动态</span>
+                <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:202.24719101123597%"></div></div>
+                <span class="stat-count">360</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">📈 行业趋势</span>
+                <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:1670.7865168539324%"></div></div>
+                <span class="stat-count">2974</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">⚙️ 运营干货</span>
+                <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:528.6516853932584%"></div></div>
+                <span class="stat-count">941</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">🚚 物流仓储</span>
+                <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:83.70786516853933%"></div></div>
+                <span class="stat-count">149</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">⚠️ 风险预警</span>
+                <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:229.7752808988764%"></div></div>
+                <span class="stat-count">409</span>
+            </div>
+</div>
+
+
+            <div class="stats-section">
+                <h3 style="margin-bottom:12px;font-size:14px;color:#6b7280;">🏆 今日必读 Top 5</h3>
+                
+                <div class="top-pick">
+                    <span class="top-rank">#1</span>
+                    <div class="top-content">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <a class="top-title" href="https://www.upkuajing.com/knowledge/zixun/29996" target="_blank">别只看搜索量，AI正在重做亚马逊关键词分析！_跨境魔方</a>
+                    </div>
+                    <div class="top-tldr">💬 </div>
+                </div>
+                <div class="top-pick">
+                    <span class="top-rank">#2</span>
+                    <div class="top-content">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <a class="top-title" href="https://www.upkuajing.com/knowledge/zixun/29997" target="_blank">南康家具产业的“第三次突围”_跨境魔方</a>
+                    </div>
+                    <div class="top-tldr">💬 </div>
+                </div>
+                <div class="top-pick">
+                    <span class="top-rank">#3</span>
+                    <div class="top-content">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <a class="top-title" href="https://www.upkuajing.com/knowledge/zixun/29998" target="_blank">竞品Listing到底值不值得研究？先让 AI 帮你看这3点_跨境魔方</a>
+                    </div>
+                    <div class="top-tldr">💬 </div>
+                </div>
+                <div class="top-pick">
+                    <span class="top-rank">#4</span>
+                    <div class="top-content">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <a class="top-title" href="https://www.upkuajing.com/knowledge/zixun/29999" target="_blank">GGE展商剧透｜Walmart代工厂、迪士尼认证、150+专利，都来了_跨境魔方</a>
+                    </div>
+                    <div class="top-tldr">💬 </div>
+                </div>
+                <div class="top-pick">
+                    <span class="top-rank">#5</span>
+                    <div class="top-content">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <a class="top-title" href="https://www.upkuajing.com/knowledge/zixun/30000" target="_blank">用卖家精灵 MCP 跑选品：3 个反常识方法，帮中小卖家找到可复制机会_跨境魔方</a>
+                    </div>
+                    <div class="top-tldr">💬 </div>
+                </div>
+            </div>
+            <div class="category-section">
+                <h2 class="category-title">📈 行业趋势
+                    <span class="count-badge">178 篇</span>
+                </h2>
+                <div class="card-grid">
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29996" target="_blank" rel="noopener">
+                        别只看搜索量，AI正在重做亚马逊关键词分析！_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: cad1a292-be2f-49bf-adaf-69839de61b47)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29997" target="_blank" rel="noopener">
+                        南康家具产业的“第三次突围”_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 629c2268-bfae-41d0-b51f-60affed1d29f)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29998" target="_blank" rel="noopener">
+                        竞品Listing到底值不值得研究？先让 AI 帮你看这3点_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: c9c8d3ca-7790-4aa7-b13e-49dc8aced1e4)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29999" target="_blank" rel="noopener">
+                        GGE展商剧透｜Walmart代工厂、迪士尼认证、150+专利，都来了_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: f61430b6-a892-4fa0-a127-730069a17893)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/30000" target="_blank" rel="noopener">
+                        用卖家精灵 MCP 跑选品：3 个反常识方法，帮中小卖家找到可复制机会_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 6a6cbcc7-b0ce-4c0a-b056-d2f7a2bfe470)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/30001" target="_blank" rel="noopener">
+                        外贸获客软件哪家好？先把你的团队规模对上号_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 96eac929-4489-4a51-837f-39561b1a7343)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/30002" target="_blank" rel="noopener">
+                        突发！美国海关盯上2500美元以下包裹_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 0b6bc5f7-2c66-4fb6-82e7-0c1f34be29f4)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/30003" target="_blank" rel="noopener">
+                        2026领星跨境电商AI峰会圆满收官：共探AI实践和全球化增长新机遇_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 93f97d2c-a03e-42ad-bc74-e98225bb3bb2)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/30004" target="_blank" rel="noopener">
+                        一张巨鹿插画正在维权！已有一批店铺中招！_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: f89f2409-8cdb-41a3-8fd5-6c916ff717d7)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/30005" target="_blank" rel="noopener">
+                        美国追讨近2.9亿美元！中国商品进口商被指涉嫌逃避关税_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: a5494fc2-181e-458c-a100-67fea9ec20cc)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/30006" target="_blank" rel="noopener">
+                        新店允许“跟卖”，80%首周即出单！这个平台狂抢中国卖家_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 02685190-6d41-4024-8893-0a9d9871ceab)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/30007" target="_blank" rel="noopener">
+                        亚马逊紧急封禁，Meta新上线的AI产品，有多“危险”？_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: aadcea5b-f4e9-4a94-b457-2f42251fc3a5)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-12</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/30008" target="_blank" rel="noopener">
+                        闷声爆卖海外！这批硬核国货悄悄拿下海外类目TOP_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: ff348bbe-853b-4ca3-aaba-97e8e2d44e5b)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29979" target="_blank" rel="noopener">
+                        方向、答案、人脉，亚马逊这场峰会一次给齐_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 17125e87-1e6d-48bf-81ae-4ff2c89cf077)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29980" target="_blank" rel="noopener">
+                        旺季来了！亚马逊巴西站Q4大促全攻略请收好_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 0df6f3df-a314-4e16-8a0d-f41b7a59bed7)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29981" target="_blank" rel="noopener">
+                        重视！亚马逊送错仓后果比你想象的更严重_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 208f4e6c-c0c3-4f91-bf66-bef1afc7e1ad)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29982" target="_blank" rel="noopener">
+                        4个人、3个月！如何在美国做爆1根数据线？丨1天1个出海案例_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: f066cc8a-bcaa-44a2-b0ea-09cd359e8230)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29983" target="_blank" rel="noopener">
+                        退税811.75万被追回，还被罚2倍！这家企业栽在旧账上_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: b4a4ad4f-6b82-4fc5-aa90-99b16aa70571)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29984" target="_blank" rel="noopener">
+                        Dean Saffron摄影图发案！网红表情包切勿随意商用！_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 54e68ab8-5ecb-482f-93ee-188313d6656f)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29985" target="_blank" rel="noopener">
+                        安克创新，为何被日本人称为“本土国货”_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 87e6f40c-8546-412d-b09f-0fdaaf6c8474)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29986" target="_blank" rel="noopener">
+                        从0到月销50万，这支百货团队花18个月总结出了3条可复用的经验_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 710d2ace-9996-4915-84dd-b034837a430d)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29987" target="_blank" rel="noopener">
+                        9810免税简单谁都能做？别因“操作不当”陷入错享优惠风险_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 385d61af-af46-4735-b0c8-de7105bfe60b)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29988" target="_blank" rel="noopener">
+                        一条链接卖了几十万美刀！这个品国内没人做，国外卖爆了_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: f14891d6-8462-4453-a3f9-fd03f4c2e6ec)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29989" target="_blank" rel="noopener">
+                        首月爆单1.3万件、次月2.4万件！又一产品卖爆了_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 0ff58be8-8d4c-4ab0-9115-c9c332db48c7)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29990" target="_blank" rel="noopener">
+                        30家被告名单已出！Warren Photographic腊肠犬摄影图发案！_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 54ea198f-6932-4751-b7d1-f0a755ed56f2)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29991" target="_blank" rel="noopener">
+                        AI外贸获客的模板优化有没有用？用匹配样本对照实验验证，别靠前后对比下结论_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: f585f4e1-3822-4023-8915-394a217a8833)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29992" target="_blank" rel="noopener">
+                        外贸获客软件找来的客户名单，价值多久掉一半？用线索半衰期排跟进顺序_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 8484161d-3110-4904-b370-2193aa605456)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29993" target="_blank" rel="noopener">
+                        外贸获客工具怎么选才能提升回复率？先让找客户、验证、联系、跟进踩上同一个节奏_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 75ba0342-5db6-47ee-904e-33f92b2e2c62)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29994" target="_blank" rel="noopener">
+                        海关数据准不准怎么验证？拿自己的真实提单去反查，比听任何承诺都直接_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 1e9fb0be-b4b6-4c9e-af2b-8f0b027bfe40)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29995" target="_blank" rel="noopener">
+                        工厂用WhatsApp群发工具怎么降低无效触达？先筛客户，再谈发送_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 0f27ca30-62fc-40e3-8cda-5199980d2151)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0rqxyzyglq9" target="_blank" rel="noopener">
+                        美元汇率跌破6.7！头部跨境卖家亏近亿主业在赚钱，汇率却亏近1个亿，这是很多头部卖家这一年来的反差困境。20小时前.跨境资讯通跨境电商运营技巧亚马逊运营
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 94cc2814-fefb-4842-85fe-a3ae6feec03f)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0s66v819qm8" target="_blank" rel="noopener">
+                        希音在英国杀疯了，一年卖出230亿近一个月，SHEIN是好消息接连不断，一份来自英国市场的成绩单，再次让这家出海巨头受到行业关注。17小时前.跨境资讯通跨境电商运营技巧跨境电商资讯
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 9f2afe58-b5e7-401d-b999-421106e76e02)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0s89wdty58g" target="_blank" rel="noopener">
+                        2026年9月东南亚六国TikTok Shop访问量达4.62亿，相当于Shopee的97.5%2026年9月TikTok Shop东南亚六国访问量约4.62亿次，达Shopee的97.5%，并在印尼、越南、马来西亚、菲律宾超越Shopee
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: bc13856d-bb89-40c6-86be-375b7f00b3e8)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0s8cc9mcbnk" target="_blank" rel="noopener">
+                        AI购物Muse或优先推荐知名卖家，新品牌面临曝光难题Meta的AI购物智能体Muse优先推荐知名商家，仅Meta目录商品可对话内结账；测试显示约95%候选商品来自Meta目录，浏览器搜索默认最多访问3家商户、返回10件商品。17小时前.跨
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 8fb516d9-22d6-4b5c-b599-0a2cba4d90c4)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0s8cc9mcbnl" target="_blank" rel="noopener">
+                        商务部等7部门：实施品质电商“五优”行动10月10日消息，商务部等7部门发布《关于实施品质电商“五优”行动的通知》，具体包括五大方面15条举措：17小时前.跨境资讯通跨境电商运营技巧跨境电商资讯
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 2f2bced9-7efb-4e48-b27c-59fab40ed300)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0s8dcpti2v4" target="_blank" rel="noopener">
+                        欧盟拟增设包裹市场监督费，违规罚款上限达全球年营收6%欧盟对非欧盟包裹已征收3欧元进口费及2欧元处理费，并拟设市场监督费，违者最高罚全球年营业额6%。17小时前.AMZ123 跨境快讯跨境电商运营技巧跨境电商资讯
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: db66a6cc-a69a-4f0a-9962-21963c5dc5e1)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0s8ehszdi4g" target="_blank" rel="noopener">
+                        TikTok Shop 450万商品报告：逾三分之二头部收入来自身体相关商品追踪超15万美国卖家的报告显示，TikTok Shop头部商品超三分之二收入来自涂抹、口服或穿戴类商品，美妆占比近三成，中位价约40美元，榜单更替快、与亚马逊头部卖
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 7b1471be-c2d9-42f9-b557-07eb1b4f24c5)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0s8ei79sf0g" target="_blank" rel="noopener">
+                        亚马逊启用法国第10座配送中心 计划创造1000个岗位亚马逊在法国博韦启用第10座配送中心，投资超2亿欧元、占地11万平方米，将招1000人，属其在法150亿欧元最大投资计划。17小时前.跨境资讯通跨境电商运营技巧跨境电商资讯亚马逊
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: fdaae0e9-5c7a-4654-b147-1bcda8f0429b)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0sa6dl6x4ow" target="_blank" rel="noopener">
+                        亚马逊危险品合规新规：10月26日起，新建或编辑Listing要先“答题”！对于涉及相关品类的卖家来说，如果产品资料没有提前准备好，一条Listing的创建就可能从几分钟变成几天甚至几周的等待。16小时前.跨境资讯通亚马逊亚马逊运营
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 43e2709b-ff96-4881-9194-5090f61c9b95)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0sbvggf56o0" target="_blank" rel="noopener">
+                        TikTok Shop美区跨境POP定档2026黑五网一，六大核心玩法报名通道全面开启六大玩法全景：全链路协同，构建大促增长矩阵16小时前.跨境资讯通TikTok
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 793540d7-b1e3-4edf-a759-115dd7b2c334)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0scqnycjgu8" target="_blank" rel="noopener">
+                        TikTok Shop将上线Sell Across EU功能，英欧卖家可互售12国TikTok Shop将于10月19日推出“Sell Across EU”功能，实现英国与德法等12个欧盟国家双向销售，平台依据店铺活跃度等四项指标自动评估资
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 80a328d5-34fe-4bd2-a272-252488077aaf)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0scr0x6kb9c" target="_blank" rel="noopener">
+                        Ozon今年识别涉欺诈订单金额达114亿卢布，锁定32.2万笔可疑订单Ozon在2026年初至披露时点识别欺诈订单金额114亿卢布，锁定32.2万笔可疑订单，拦截近60万条可疑聊天记录，关停200个欺诈应用和逾1.1万个钓鱼网站。16小时前
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: d9426c58-9ed7-46a8-af3c-3ed849ce1948)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0scr0x6kb9d" target="_blank" rel="noopener">
+                        东方甄选回应青虾仁净含量争议：解冻方式不符合国标10月10日消息，针对近日引起争议的“东方甄选自营青虾仁解冻后称重缩水”问题，东方甄选发布说明回应。16小时前.跨境资讯通跨境电商运营技巧跨境电商资讯
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 492bb5df-97b6-4b6d-93c8-94675a581ced)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0scr9lluxvk" target="_blank" rel="noopener">
+                        苹果调整秋季订单：iPhone Duo加单30%，iPhone 18 Pro削减订单苹果调整2026年秋季iPhone订单：Duo增30%但总量不足1000万台，18 Pro减10%至15%，Pro Max增10%至15%，Pro系列整体不
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 8c22ebda-7b78-4d72-bcc0-9bf56699e040)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0skz6fzptds" target="_blank" rel="noopener">
+                        美国海关又双叒叕整活？强制Bond、T11申报提前，新增T13！美国海关又双叒叕整活？强制Bond、T11申报提前，新增T13！14小时前.百运网跨境电商资讯
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: d30738c4-60fd-46e5-a442-68f8f95b8606)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0smbfth9w5c" target="_blank" rel="noopener">
+                        同样做亚马逊，为什么有人越卖越轻松，有人越卖越缺钱？两家店铺销售规模相近，经营感受可能完全不同。一家补货有节奏，遇到波动还有余地；另一家订单不少，却不断为货款、广告与仓储找资金。区别往往藏在每单收益、库存周转和承诺安排里。销量只是结果之一，
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 240c8ac7-7881-4f65-8778-71825ce09a75)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0smnj2xtpmo" target="_blank" rel="noopener">
+                        亚马逊产品排名上去了，为什么利润反而下来了？不少卖家都有过类似时刻：白天盯着后台，晚上还在算账，明明已经投入了不少时间和钱，却越来越难回答一个最简单的问题——“现在这套做法，真的值得继续吗？”排名冲上去后广告和促销成本持续变高，答案通常不在
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 3ea0fc61-08fd-4c45-b1b9-03802b372c63)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0su8se93uv4" target="_blank" rel="noopener">
+                        亚马逊单量集体跳水！卖家：今天心态崩了部分卖家将这段时间视为大促后的常见停滞期，认为10月下旬单量可能会好转。12小时前.卖家之家亚马逊亚马逊运营
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 25d66f71-c182-4dbe-a4f5-93c69e335b45)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/1wswj0Ms" target="_blank" rel="noopener">
+                        得物公开招募俄罗斯本土卖家，佣金率低至19%
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: ee179425-7bf5-4ed2-86f3-b9e46a2f9f21)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/9OwebVYR" target="_blank" rel="noopener">
+                        美国CBP发布低价值货物入境新规草案
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 51e771f2-abb0-44f1-8e37-d5d9c7cb6054)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-11</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/nj1KDYOv" target="_blank" rel="noopener">
+                        26年亚马逊秋季大促线上销售额达98.6亿美元
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 432aea47-3e4c-4a18-ae17-9f0db0016459)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10 03:27</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/kHMmyoaK" target="_blank" rel="noopener">
+                        AI购物Muse或优先推荐知名卖家，新品牌面临曝光难题
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: fdde4236-518d-44fd-939c-a999d7c87f45)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10 03:45</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/l3uuwT3m" target="_blank" rel="noopener">
+                        沃尔玛启用加州新自动化履约中心
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 0f826221-d618-4e5a-bd9b-3493be6ba691)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10 04:02</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/ZSSTFBEa" target="_blank" rel="noopener">
+                        亚马逊法国启用第10座配送中心，创造1000个正式岗位
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 79c99670-4f18-4d58-9d4f-b11762820035)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10 06:18</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/NWvqhMVz" target="_blank" rel="noopener">
+                        美线运价仍处高位！欧洲、拉美多条航线酝酿涨价
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 3f1f2f72-26bf-42f9-a9da-fc2681b351aa)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10 07:27</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/Egb1Zenq" target="_blank" rel="noopener">
+                        TRO资讯｜睿观8月预警过的热卖万圣节饰品2天内发起4次维权，卖家速查！
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: e240ac3c-5a7f-4c10-a429-7762d834df50)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10 09:02</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/LPMG4bjP" target="_blank" rel="noopener">
+                        Zalando在德国与波兰部署AI退货机器人
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 0bd52f02-075e-43b4-af7c-d04b37a0a634)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10 09:03</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/NMxZm0Tl" target="_blank" rel="noopener">
+                        雅虎购物推出YouTube联盟营销计划
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 840bbdbc-2a1e-40f9-9dad-809a66b040b8)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10 09:40</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/CnbwNHcH" target="_blank" rel="noopener">
+                        亚马逊印度大促创纪录，下单量同比增长100%
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: a37d6ad9-ebce-40b6-97d5-fbed88f5901c)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10 09:54</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/kJAa8NcM" target="_blank" rel="noopener">
+                        亚马逊日本站感恩节大促定档10月16日
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: f7d1b32b-050d-464b-be20-c65de5c8748c)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10 09:59</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/Mvyu9Zt2" target="_blank" rel="noopener">
+                        AMZ123会员专享丨10月第1周资讯汇总
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: ea841a4d-3ce3-4eca-bba6-6f4de173d5a2)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29932" target="_blank" rel="noopener">
+                        大疆也做ebike！一年卖出3万台，营收超10亿_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 02309d37-ab84-4025-9f4e-c5152ac07ca3)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29933" target="_blank" rel="noopener">
+                        这些品类大量稀缺！深圳跨境卖家在墨西哥，简直像开挂_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 65a1fe0e-1d27-427f-9c60-cc90aa5013b1)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29935" target="_blank" rel="noopener">
+                        选海关数据查询工具，先分清你要的是数据平台还是一体化获客系统_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 5267fe46-89eb-4110-8cf3-a163a7c48825)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29936" target="_blank" rel="noopener">
+                        试用AI外贸获客工具，先用历史客户反查召回率，比听案例靠谱_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 9bec911a-5743-4a40-89ba-ce97f8fee4e3)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29937" target="_blank" rel="noopener">
+                        预算不多的SOHO，外贸获客工具怎么搭才不浪费？先把业务动作拆开再谈花钱_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 22211258-3b46-4bae-a09e-044b2d804c28)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29938" target="_blank" rel="noopener">
+                        WhatsApp群发工具和多账号客服工具，名额有限时先买哪一头？_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 7a72cc94-6fdf-4681-a968-6a164a44183b)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29939" target="_blank" rel="noopener">
+                        AI外贸获客的关键词，扩到第几个词就该停？用线索纯度曲线找边界_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 450032fb-ecc2-446e-b912-eb6e532a86ae)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29940" target="_blank" rel="noopener">
+                        海外红人营销|深圳小家电，在 TikTok 卖出 1.4 亿元_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 00d61f93-bef2-402f-b180-9ab3ada216c5)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29941" target="_blank" rel="noopener">
+                        海外红人营销|国产保温杯征服欧美女人，深圳品牌TikTok年销过亿_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 849aeada-1358-4f19-86a1-17d1ad257e65)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29942" target="_blank" rel="noopener">
+                        亚马逊电动切割工具合规新规_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: b823066c-80e9-4e5f-aaae-41ba8bdb558e)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29943" target="_blank" rel="noopener">
+                        1个豆包，串起选品、经营和 TikTok：亚马逊运营还能这样自动化_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 37686469-350f-460b-ad2c-9769f805cc55)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29944" target="_blank" rel="noopener">
+                        4600万美元众筹爆款背后，AI硬件如何打开全球增长？_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 9c75a966-7a01-4b79-8eab-5d6ebd4800a5)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29945" target="_blank" rel="noopener">
+                        亚马逊主要营业地址验证，如何才能通过审核？_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 979fcc08-e64d-4267-b795-4c30cf92cbd4)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29946" target="_blank" rel="noopener">
+                        2小时卖爆35万美元！欧洲直播达人组团来中国选品_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: f4be7329-424d-4e7a-96ce-53e76ddb2137)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29947" target="_blank" rel="noopener">
+                        2小时卖爆35万美元！欧洲直播达人组团来中国选品_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 84b5f5bd-d769-484b-9627-87becf5d1fe3)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29948" target="_blank" rel="noopener">
+                        亚马逊越做越累？竞品CPC加价，你跟还是不跟？先把这几个&quot;反常识&quot;逻辑想明白！_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 06751048-3570-414d-9693-bd2d3b3bd9a4)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29949" target="_blank" rel="noopener">
+                        毛利率超60%！这是亚马逊最后的高利润洼地_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 132b5050-a314-4181-b70a-1661843c9ba4)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29950" target="_blank" rel="noopener">
+                        如何为亚马逊产品定最正确的价格以促进业务成功？系统详解5种亚马逊策略定价法_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: f01347af-e535-4903-a7aa-8a037ad96ae3)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29951" target="_blank" rel="noopener">
+                        亚马逊新版后台核心操作变革_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 286f4d9c-1f03-450f-b60b-891cbc7e557f)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29952" target="_blank" rel="noopener">
+                        一个没有爆款的行业：汽配出海，正在补上“最后一公里”_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: ad939c98-7a01-4b36-9460-ecfc9a6f2ee8)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29953" target="_blank" rel="noopener">
+                        不卷价格，中国品牌出海靠什么建立真正的产品力？_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 345b553c-a291-49e6-9762-d6648cad3284)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29954" target="_blank" rel="noopener">
+                        公司主页、个人IP和员工矩阵如何组成一套LinkedIn获客系统？_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 071fe6d9-13c8-4d4a-9f32-1dbcaffbdb8c)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29955" target="_blank" rel="noopener">
+                        海外红人营销|用户破千万！比亚迪前员工做麦克风干到全球第一_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 0a4eb19d-104f-4767-ba6b-2f4dccb842b8)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29956" target="_blank" rel="noopener">
+                        海外红人营销|卖了1000万台！影石凭什么突然杀出来了？_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 3ef50e40-015a-4dfc-b381-999c18238d8f)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29957" target="_blank" rel="noopener">
+                        欧盟CRA新规已生效：漏洞通报限时24小时_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: b090d597-876a-4f8a-8e44-008fe11b5071)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29958" target="_blank" rel="noopener">
+                        你还在问为什么你没有9610报关单吗？_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 7f9ef2a6-771e-4372-9551-977980c9de23)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29959" target="_blank" rel="noopener">
+                        集运的门槛不在物流，在客户来源_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 22c7d9af-bd0d-4d67-9040-cbf19d889531)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29960" target="_blank" rel="noopener">
+                        7天狂卖1.16亿美金！这个新兴市场的潜力被严重低估_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 8e491120-96f3-4900-9372-8b2f0875a8a2)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29961" target="_blank" rel="noopener">
+                        FCC新规倒计时！10月13日起，你的货还能进美国吗？_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 4a5b2aa5-8d4b-45d1-b92a-a01e8ca0fa50)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29962" target="_blank" rel="noopener">
+                        集运公司的无奈_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: d31731ef-603f-443b-a0f6-5410da015f19)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29963" target="_blank" rel="noopener">
+                        香港公司电商账务处理常见问题与解决方案_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 9ed32ed6-518e-417f-bc67-3386994ca87a)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29964" target="_blank" rel="noopener">
+                        销售额已经跌破经济关联门槛，销售税账号可以直接注销吗？_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 8e55bb78-62a3-46bb-aac3-d106159dbb30)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29965" target="_blank" rel="noopener">
+                        流量暴涨200%+，转化率提升35%！爆单卖家都在吃AI免费流量_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: aa0a4236-42db-4ddf-85f7-2410f32fc8fa)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29966" target="_blank" rel="noopener">
+                        每期一家跨境电商公司：eSUN_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 0ff8eabc-347c-46a7-af71-8b544c5ff51b)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29967" target="_blank" rel="noopener">
+                        从互动率到心智占有率：AI测量海外网红营销“心理效果”的三条路径与实操建议_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: c00f82a9-e333-449d-afc4-b3c420b09976)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29968" target="_blank" rel="noopener">
+                        消息发了一堆没人回？外贸人在LinkedIn上最常犯的“伪高效”错误_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: be9f48c6-9613-4767-a825-6e1af3ec0a19)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29969" target="_blank" rel="noopener">
+                        AI外贸获客的关键词越扩越偏怎么办？用线索纯度曲线找准扩词边界_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 3718d4da-7870-4812-a6ff-f8496aa9f2d1)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29970" target="_blank" rel="noopener">
+                        外贸获客软件买回来没人用？用功能渗透率、任务完成率、机会产出率算清落地质量_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: ee3c30ea-4448-4e04-9d11-e05e900f7982)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29971" target="_blank" rel="noopener">
+                        海关数据查询工具多少钱才不贵？先把计费口径统一，再按同一套需求报年总价_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 74d72da9-6adb-4f83-be45-5653320d073f)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29972" target="_blank" rel="noopener">
+                        2026年AI外贸获客软件怎么选？六款主流工具按数据、AI、触达三层拆开比_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 5b78498b-767a-423e-81bb-a19c3c597b5f)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29973" target="_blank" rel="noopener">
+                        WhatsApp群发工具试用期怎么测？盯住六个指标再决定买不买_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 26f67931-7084-4f72-8967-7650a81a4aed)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29974" target="_blank" rel="noopener">
+                        AI外贸获客工具的真实成本怎么算？把年费之外这五笔账一起摊开_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 14ff2606-6f12-41be-80da-5b076ae57089)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29975" target="_blank" rel="noopener">
+                        工厂外贸团队挑海关数据工具，别看进口量排行榜，先看产品匹配和交易持续性_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 1e5929fe-981e-4f51-8113-fa8be96acfb5)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29976" target="_blank" rel="noopener">
+                        SOHO到底要不要买WhatsApp群发工具？先算清楚每天真正能触达多少人_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 558b37e0-9730-4964-a3a9-c8e94eb41140)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29977" target="_blank" rel="noopener">
+                        多市场多业务员的外贸公司怎么选获客工具？先理清线索流转，再定分配规则_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 5dbc108d-c028-40a4-97ed-91254d8213ac)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29978" target="_blank" rel="noopener">
+                        工厂做出口怎么选外贸获客软件？盯住品类命中率、买家身份、决策人和服务_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: a7d7d8d1-c00b-42e2-a114-678c980ffad7)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0o3g16sn5kw" target="_blank" rel="noopener">
+                        印度至中东运价高企催生新航线，马士基开通集装箱穿梭环线持续高运价推动印度至中东专用航线开通，马士基9月24日首航尼赫瓦舍瓦至富查伊拉双周班环线，即期运价6000至7000美元/40英尺箱，达曼达9500美元，乌姆盖尔约1万美元。20小时前.
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 8cf9e405-1053-4e75-af43-4efc14ec0ccb)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0o7k83h5gjk" target="_blank" rel="noopener">
+                        亚马逊GWD大扩张：新增欧洲五国、日本、加拿大，卖家库存不用再分仓！把原本需要在不同国家分别完成的备货动作，前移到一个统一的货源地仓库里完成。对于长期被“多国备货、分批分仓”困扰的跨境卖家来说，这可能是一次供应链管理方式的实质性改变。20小
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: bfb8d8ad-5314-466a-a5c4-45b6a1ebeb2b)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0loxr1i4cu8" target="_blank" rel="noopener">
+                        旺季来了！亚马逊巴西站Q4大促全攻略请收好Prime会员大促是亚马逊专为 Prime 会员打造的年度大促，也是黑五网一前最重要的一次预热与流量爬坡。活动期间仅 Prime 会员可享受专属折扣。Prime 会员客户黏性强、转化率高，这也是提前
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 6bed5be5-402b-4d16-ba81-603c83480d9e)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0ki9bh8ef41" target="_blank" rel="noopener">
+                        10月海外多平台大促档期重叠，亚马逊、沃尔玛、Temu促销周期交叉亚马逊Prime Big Deal Days于10月6日在22国启动，沃尔玛、Target、Temu和TikTok Shop同期举行促销，分流其站内流量。20小时前.AMZ1
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 7806f145-614a-44c9-9561-f86fd11131b5)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0olaufy7wu8" target="_blank" rel="noopener">
+                        突发！亚马逊再次裁员这次裁员规模在1000人以内，但裁员的时机和细节，却让人越看越心酸。17小时前.跨境资讯通亚马逊亚马逊运营
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: fcb44cd3-71b0-48a8-9f4f-884ddfa58a61)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0o4o0j83xfk" target="_blank" rel="noopener">
+                        用豆包可以付水、电、燃气费？回应来了10月9日，接近豆包人士向记者表示，豆包正在逐步建设包括出行服务、生活缴费等生活场景下的办事能力。17小时前.AI茶话荟人工智能
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 08030d3c-b836-437e-845f-a5ccdb013e85)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0o6a6db18g0" target="_blank" rel="noopener">
+                        Prime秋促落幕，美国线上消费98.6亿！卖家却陷单量微涨、广告猛增困境？数据背后的真相：需求还在，但消费者变了17小时前.跨境资讯通亚马逊亚马逊运营
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 9cdd4634-6ebd-4d26-a123-6bbb522eb033)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0olgz9xk934" target="_blank" rel="noopener">
+                        跨境圈大规模裁人从深圳坂田、龙华、福永，到广州白云、义乌电商产业园，不少跨境电商运营正身处这场无声的博弈之中。17小时前.跨境资讯通亚马逊跨境电商大卖
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 7f49e526-f816-43d9-b483-0a9fa8300330)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0ono6eaaiv4" target="_blank" rel="noopener">
+                        店铺有订单有流水，大批跨境卖家却关店退场！现在很多跨境卖家店铺有流量、有订单、海外仓有货，账面流水看着很漂亮，但是不敢扩品、不敢备货，越做心里越慌。压着几十万上百万的海外仓库存，不敢扩招团队，账面算下来好像有利润，做完税务、出口申报核算之后
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 7651f4af-3746-4734-bbff-98a15aa4d40e)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0ooo85771ts" target="_blank" rel="noopener">
+                        卖家故事：跨境黄埔军校——安克系裂变9家出海大卖放眼整个深圳跨境圈，没有第二家公司，能做到员工出走、不是对手，而是生态；骨干创业、不是流失，而是增量。17小时前.跨境资讯通资本市场跨境电商大卖
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 706827f9-bb30-4e2d-b53f-851aea2f425a)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0oxv3fmyr5s" target="_blank" rel="noopener">
+                        广告一停就没订单：你的亚马逊店铺，到底有没有真正的竞争力？不少卖家用暂停广告的方法检验产品：一停销量就跌，于是认定产品没有竞争力；恢复投放后订单回升，又觉得只能继续花钱。这个判断省事，却把流量来源、购买意愿和广告归因混在了一起。要看懂广告依
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 2d133ff0-adca-471a-8312-b4aeb4ab3c66)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0oybfe81udc" target="_blank" rel="noopener">
+                        亚马逊产品利润只剩5%，还值得继续做吗？做亚马逊久了，很多人会发现一个很现实的变化：刚入行时，大家最关心的是“怎么出单”，做了一段时间以后，真正让人睡不着的却往往变成“这门生意到底有没有越做越好”。账面还赚钱，但一次退货或涨运费就可能归零，
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 85343d02-a9fb-448a-aad3-fbec4ff76584)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0oyy3qzey9s" target="_blank" rel="noopener">
+                        亚马逊清库存，最怕的不是亏钱，而是越拖越亏做亚马逊久了，很多卖家都会发现，真正让人头疼的往往不是某一天没订单，而是一批货明明还能零星出单，却怎么都卖不快。继续投广告，利润越来越薄；直接降价，又担心把价格体系打乱；什么都不做，FBA仓储费却不
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: a1567341-0131-4ebc-8398-1790539a0817)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0ozb486cs8w" target="_blank" rel="noopener">
+                        亚马逊美国站10月新规：6条政策齐落地，旺季前你必须知道的事旺季配送费开征、危险品合规加严、捆绑销售扩围、自配送考核落地……六条新规几乎同时压过来，不少卖家还没反应过来。14小时前.VIOMALL跨境分销平台跨境电商运营技巧亚马逊跨境电商资
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: dcc7ab45-a808-46b2-82f5-7a4d3f029833)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0p5vjl4ikg0" target="_blank" rel="noopener">
+                        突然！亚马逊近千人被裁员！大促期间亚马逊再裁零售岗13小时前.卖家之家亚马逊亚马逊运营
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 5ef12a74-584a-4a7d-bab5-b7aca52d2685)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/fljKFg2l" target="_blank" rel="noopener">
+                        前8月上海口岸跨境电商出口规模达1069亿元
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 870f5e29-18b5-4d1f-9434-89fa8f0da6b6)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/KzcrArNM" target="_blank" rel="noopener">
+                        出口印尼注意！清真强制认证将于10月18日落地
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 8abebd86-e397-4205-a8fd-716a72934440)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/odmwqHIh" target="_blank" rel="noopener">
+                        亚马逊推出评论邀请与AI广告等新功能
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 8d1f9119-7822-4785-b38f-e5d6bcc53e1f)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/kxcnHtHJ" target="_blank" rel="noopener">
+                        TikTok推出一系列功能，升级AI代理、广告和创作者营销
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 16388895-54ba-470e-bab9-8c4411f355fa)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-10</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/E6mqqzjf" target="_blank" rel="noopener">
+                        2026亚马逊秋促数据出炉，平均订单金额达48.78美元
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 4f09b45d-68b4-48b8-9ffb-9b3d0d080299)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09 03:54</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/nAXHUvL6" target="_blank" rel="noopener">
+                        235间跨境女装店遇TRO；亚马逊电脑包被告店铺曝光！
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 2b528be3-7ed1-4971-a3df-34cec48f949f)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09 04:03</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/CqRQRI27" target="_blank" rel="noopener">
+                        TikTok被禁止在Meta美国等七国平台投放广告
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: c1a22869-ad8c-44f2-b959-aa97925474ac)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09 06:10</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/NFq7FnCM" target="_blank" rel="noopener">
+                        广东小城，靠玩具做出500亿跨境生意
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 764bd85f-df71-41bd-baf6-00af3562eded)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09 06:20</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/OpjaFxHU" target="_blank" rel="noopener">
+                        TRO资讯｜距离圣诞爆单还有2个月，侵权产品先被他盯上了
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 8b45d4ee-9396-492e-9c1d-f9de65e3d71a)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09 07:26</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/sXbXYnhM" target="_blank" rel="noopener">
+                        谷歌推出Gemini企业级AI代理，可自主执行任务
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 62b08d38-f8fe-42d0-831e-07990d621fc6)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09 08:00</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/kdd5bn72" target="_blank" rel="noopener">
+                        2026领星跨境电商AI峰会圆满收官：共探AI实践和全球化增长新机遇
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 5e6fc5d8-e0f9-40df-bc86-1858e3fe1a87)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09 08:36</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/ZqJt0aXf" target="_blank" rel="noopener">
+                        Shopify扩展欧洲物流服务，新增批量处理订单等功能
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 5eae9daf-9571-4ad7-a02d-efb4c240bbfb)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09 09:15</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/7HXXLX9s" target="_blank" rel="noopener">
+                        亚马逊确认新一轮裁员，客服等团队受影响
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: c21c5f19-2cbc-4c3b-961f-a949785ee75f)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09 09:46</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/CgU7skVT" target="_blank" rel="noopener">
+                        Yandex俄罗斯数据中心遇袭，多项服务受影响
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 58a64652-7f9c-4c06-af88-79cf8ce98ba2)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09 10:01</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/odEJ3QUn" target="_blank" rel="noopener">
+                        Newegg与谷歌合作，可在AI对话中直接购物
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 907f7e49-18b0-46e7-9b73-9dd49d156010)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0kyn1ste8lc" target="_blank" rel="noopener">
+                        德勤数据显示美国万圣节消费小幅攀升德勤调查显示，美国消费者今年万圣节户均计划支出285美元，其中零售店消费219美元、体验消费66美元，34%的消费者计划比去年花得更多。18小时前.AI跨境快讯跨境电商运营技巧零售电商
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Connection error.</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0kqtehh1zpc" target="_blank" rel="noopener">
+                        亚马逊秋季会员日后，卖家如何稳住排名与销量？秋促后排名暴跌？广告梯度调整+Listing轻改+库存管控，7天稳住核心流量。18小时前.老虎站外说谈亚马逊亚马逊运营亚马逊FBA
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Connection error.</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0kz95007myo" target="_blank" rel="noopener">
+                        沃尔玛将在俄亥俄州新建大件商品履约中心沃尔玛计划投资3亿美元在俄亥俄州Turtlecreek Township新建履约中心，专门处理电视、家具等大件非可分类商品，预计创造300多个就业岗位。18小时前.AI跨境快讯跨境电商运营技巧零售电商沃
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Connection error.</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0kz4dwuktfk" target="_blank" rel="noopener">
+                        毛利率超60%！这是亚马逊最后的高利润洼地在亚马逊上，消费品类目早已陷入白热化的价格内卷，无数卖家靠着低价冲量、薄利多销，却始终赚不到稳定利润，还被高退货、低精准流量、恶性竞争持续困扰。18小时前.跨境电商雨果网跨境电商运营技巧跨境电商资讯
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Connection error.</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0kz30lf943l" target="_blank" rel="noopener">
+                        亚马逊宣布建设机器人工厂作为连接全球卖家和消费者的电商巨头，亚马逊每天要处理海量订单。商品能不能及时找到、拣出、分好线路并装上车，决定着消费者最终看到的送达时间。18小时前.跨境资讯通跨境电商运营技巧跨境电商资讯亚马逊
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Connection error.</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0kyy5ktv3eo" target="_blank" rel="noopener">
+                        TikTok Shop欧洲市场增长，英国GMV将达48.9亿欧元AMZ123获悉，近日，欧洲电商数据机构ECDB发布的数据显示，TikTok Shop在欧洲市场的发展呈现出明显的地区差异，其中英国仍是平台最大的欧洲市场。18小时前.跨境资讯
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Connection error.</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0hf51aedhj4" target="_blank" rel="noopener">
+                        亚马逊广告一停，订单就没了：你的产品到底有没有竞争力？1.先分清广告依赖和经营亏损
+2.停广告只能提供线索 不能直接判定产品优劣
+3.流量已经来了 消费者为什么不选择你
+4.给广告投入安排一个可以持续的理由18小时前.跨境库清宝亚马逊FBA
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Connection error.</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0l8qghhgqo0" target="_blank" rel="noopener">
+                        突发!HMM集装箱船起火!曾挂靠青岛、宁波、蛇口等港口!突发!HMM集装箱船起火!曾挂靠青岛、宁波、蛇口等港口!16小时前.百运网跨境电商资讯
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Connection error.</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0kaded89bsw" target="_blank" rel="noopener">
+                        抖音突然向淘宝京东出手水果吃完还得买，肉蛋也要经常补。生鲜这门生意，平台想争的不只是一笔订单，还有消费者下一次在哪里买。16小时前.跨境资讯通跨境电商运营技巧跨境电商资讯
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 4d3b1e59-bd81-4ed1-a746-c3f8db1b723d)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/fzm23g6pj7y8" target="_blank" rel="noopener">
+                        从亚马逊评论里找答案，xTool走出高价值出海路从产品创新到技术变革，从经营实践到新的增长议题，出海企业始终需要面对不断变化的新问题。ESC希望通过持续的交流、分享与共创，让前沿趋势得到更深入的探讨，让实践经验在交流中不断沉淀，也让企业之间
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 892647b4-2857-43a0-b1f1-934a02ecf9e5)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0lk8xt8wrnk" target="_blank" rel="noopener">
+                        中国人民银行发布关于人民币汇率的政策立场：中国没有必要，也无意通过汇率贬值获取贸易竞争优势，从不搞竞争性货币贬值中国人民银行表示，中国贸易发展根源于产业国际竞争力的提升，中国没有必要，也无意通过汇率贬值获取贸易竞争优势，从不搞竞争性货币贬值
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 38f114d0-a6bb-4578-80a0-e8d94397d06a)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0lku8z89728" target="_blank" rel="noopener">
+                        重视！亚马逊送错仓后果比你想象的更严重入库缺陷处理费（Inbound Defect Fee）
+大部分FBA卖家都不陌生。这项费用可能由多种入库缺陷原因导致，想提醒你特别关注其中一项——Misroute（送错仓缺陷）。14小时前.亚马逊全球开
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 0f953b0c-4cc5-4187-a928-3e91cd516f59)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">卖家之家</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://mjzj.com/article/g0lmut733fgg" target="_blank" rel="noopener">
+                        亚马逊秋促战报流出，有卖家爆单20倍需求还在，但消费者更精打细算14小时前.卖家之家亚马逊亚马逊运营
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: ce8ac54d-1c09-454d-b8d7-afe7d59b9b98)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/EfrCmgmH" target="_blank" rel="noopener">
+                        Target近2000件服装、家居等商品降价20%
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: a23d3637-22f9-4279-9552-5d3a1a751df0)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/I6ekJSn5" target="_blank" rel="noopener">
+                        亚马逊新品启动，用三个节点，穿越“生死线”
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 92b1906b-fa02-4055-908b-ee6752830c41)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/IZJwMnuD" target="_blank" rel="noopener">
+                        单价近千元仍遭疯抢，TikTok又火了一件“取暖神器”
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 10d802cb-53a0-4ddf-871e-4472fa7aba66)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/qqohW6On" target="_blank" rel="noopener">
+                        TikTok Shop美国推出免包装退货，覆盖近1万个网点
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 4f39cd7a-7714-43cd-849e-1d4f525cda14)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-09</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/tEUfN1Tk" target="_blank" rel="noopener">
+                        亚马逊新增两项中美空运服务，最快7天入仓
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 53dabbe0-4c7d-4d58-afc8-a7476b465668)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-08 03:48</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/SNBdhXEE" target="_blank" rel="noopener">
+                        隐私泄漏事件爆发，日本民众无语了……这是人性的沦丧，还是技术的底下啊？
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 41320a44-d1e0-4a20-93d1-f5a4e5a946f0)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-08 03:54</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/wpWFrtaO" target="_blank" rel="noopener">
+                        亚马逊在法国和墨西哥新增超2万个临时岗位
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: d1ded0ca-810b-4fde-88d5-27c19143b6ee)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-08 03:56</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/jRfdVOiU" target="_blank" rel="noopener">
+                        TikTok Shop欧洲市场增长，英国GMV将达48.9亿欧元
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: d00e53db-6392-4a5a-be7f-10935f798f64)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-08 04:40</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/MxS85gha" target="_blank" rel="noopener">
+                        亚马逊秋季会员日后，卖家如何稳住排名与销量？
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: e24a2cef-31d8-4a62-9f9f-1f5f41cc5c0e)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-08 07:48</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/iW9QOxUH" target="_blank" rel="noopener">
+                        秋促最后一天，亚马逊系统又崩了？
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 4c07f809-305a-4a8f-b7ee-414a1024483e)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-08 07:53</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/dAf0oM07" target="_blank" rel="noopener">
+                        TikTok Shop墨西哥GMV暴涨133倍
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 275f15c4-b2ad-4751-9348-f7aec45cc11c)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-08 08:21</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/GRexqkIZ" target="_blank" rel="noopener">
+                        旺季配送费生效后，亚马逊站外Deal最低能打几折？
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 81981eec-674d-4303-8832-beeeaf7b85a8)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-08 08:42</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/1ZymMJ7r" target="_blank" rel="noopener">
+                        沃尔玛投资3亿美元，新建大件商品配送中心
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: c33c9cab-ed8d-4bfa-8f8a-20012713f229)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-08 09:24</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/BkJiMcMx" target="_blank" rel="noopener">
+                        Meta、沃尔玛等公司联合推出AI代理开放标准
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 9530ade2-48cc-4e6e-a73a-376e19cef765)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">AMZ123</span>
+                        <span class="date">2026-10-08 09:52</span>
+                    </div>
+                    <a class="article-title" href="https://www.amz123.com/t/I9RV852P" target="_blank" rel="noopener">
+                        26年美国消费者万圣节预算涨至285美元，服饰仍是热销品
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: accfb71f-6cb1-4068-933b-31ba6fe00035)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-08</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29929" target="_blank" rel="noopener">
+                        一把钢锹挤进亚马逊前Top10！它凭啥一年卖出2400万丨“新”卖家故事⑱_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 6f75b2fa-0d7c-41f9-befe-26e78b904c4c)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-08</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29930" target="_blank" rel="noopener">
+                        70万卖家在亚马逊挤破头，有人却在新平台月销7000件_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: a0a677fd-d6b5-47dd-abc6-a46baff3e626)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-08</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29931" target="_blank" rel="noopener">
+                        这一平台面向中国卖家招商！厦门卖家上线3个月，月销突破百万日元_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 5d10d709-a88b-4941-8075-7776157f2dee)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-07</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29922" target="_blank" rel="noopener">
+                        349个店铺被告！这类产品不能再卖了_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 2e148ae9-5f69-4229-8b78-740a9d7b500a)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-07</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29923" target="_blank" rel="noopener">
+                        大卖要补税1078万！2026跨境税务大洗牌_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 32b5d137-8a8e-4942-8e4b-6ed77f26bba5)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-07</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29924" target="_blank" rel="noopener">
+                        同样做3C，别人卷价格！它们靠“送礼”卖出3倍溢价_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 7e1b3c9a-69b1-4e58-80a8-309badfd8143)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-07</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29925" target="_blank" rel="noopener">
+                        被日本人当成"本土品牌"的安克创新，一年在日本赚走18亿_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 95c90e39-a87c-45e6-bd2a-92450796838d)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-07</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29926" target="_blank" rel="noopener">
+                        一台“小挖”卖到1万美元，济宁工厂如何闯进亚马逊？丨“新”卖家故事⑰_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: beed20c2-04fb-43a5-9747-2595aaa7dfe2)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-07</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29927" target="_blank" rel="noopener">
+                        黑五还没到，这个珠宝品牌已经开始“备战”了_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 16841cd7-ab86-45bd-9df9-8bbf237178eb)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-07</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29928" target="_blank" rel="noopener">
+                        还没上架就亏掉百万！3C出海不能走老路了_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 3192209c-be69-4389-8dd6-6e31b810c2d2)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-05</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29919" target="_blank" rel="noopener">
+                        深圳3家企业骗税2276万，6人被抓！_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 7f4d4a38-f25f-437d-93ae-0707b9f10294)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-05</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29920" target="_blank" rel="noopener">
+                        你的品牌可能正被 AI “屏蔽”！致欧已经在用AI抢黑五流量了_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 9952f04f-4e5f-4310-b78a-4e55f0497244)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div>
+                <div class="article-card">
+                    <div class="article-header">
+                        <span class="score-badge" style="background:#22c55e">浏览 30</span>
+                        <span class="source">跨境魔方</span>
+                        <span class="date">2026-10-05</span>
+                    </div>
+                    <a class="article-title" href="https://www.upkuajing.com/knowledge/zixun/29921" target="_blank" rel="noopener">
+                        北美线下商超，正在成为跨境大卖的第二增长极_跨境魔方
+                    </a>
+                    <div class="article-tldr">💬 </div>
+                    <div class="article-summary">AI 分类失败: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 486a2c1b-d133-4742-8769-19d7eddd63f5)', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}</div>
+                    <div class="article-tags"></div>
+                </div></div>
+            </div>
+
+<!-- 历史存档 -->
+<div class="archive-section" id="archive-section">
+    <h3>📚 历史存档</h3>
+    <ul class="archive-list" id="archive-list">
+        <li class="archive-empty">加载中...</li>
+    </ul>
+</div>
+
+<div class="footer">
+    由 Amazon News Agent 自动生成 ｜ <a href="https://github.com/" style="color:#6b7280;">GitHub</a>
+</div>
+
+</div>
+
+<script>
+// 加载历史存档列表
+async function loadArchive() {
+    try {
+        const resp = await fetch('./reports.json');
+        const data = await resp.json();
+
+        const section = document.getElementById('archive-section');
+        const list = document.getElementById('archive-list');
+
+        // 从页面中获取当前报告的日期
+        const metaTag = document.querySelector('meta[name="generation-date"]');
+        const currentDate = metaTag ? metaTag.getAttribute('content').slice(0, 10) : '';
+
+        if (!data.reports || data.reports.length === 0) {
+            section.style.display = 'none';
+            return;
+        }
+
+        const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+
+        // 分离当前报告和历史报告
+        const current = data.reports.filter(r => r.date === currentDate);
+        const past = data.reports.filter(r => r.date !== currentDate);
+
+        if (past.length === 0) {
+            // 只有当前报告，没有历史 => 缩略显示
+            list.innerHTML = `
+                <li class="archive-empty" style="color:#6b7280;font-size:13px;">
+                    📌 当前报告：${currentDate}（${weekdays[new Date(currentDate + 'T00:00:00').getDay()] || ''}）
+                    — 每日自动运行后，历史报告将在此显示
+                </li>`;
+            return;
+        }
+
+        // 先显示当前报告（如果存在），再显示历史
+        let html = '';
+        if (current.length > 0) {
+            html += `
+                <li style="background:#f0f5ff;border-radius:8px;padding:10px 12px;margin-bottom:8px;border-bottom:none;">
+                    <span>
+                        <span class="archive-date" style="color:#3b82f6;">${current[0].date}</span>
+                        <span class="archive-weekday">${weekdays[new Date(current[0].date + 'T00:00:00').getDay()] || ''}</span>
+                        <span class="archive-current">👈 当前</span>
+                    </span>
+                    <span class="archive-link" style="background:#dbeafe;color:#1e40af;cursor:default;font-size:12px;font-weight:500;padding:4px 12px;border-radius:6px;">📄 最新</span>
+                </li>`;
+        }
+
+        html += past.map(r => {
+            const d = new Date(r.date + 'T00:00:00');
+            const weekday = weekdays[d.getDay()] || '';
+            return `
+                <li>
+                    <span>
+                        <span class="archive-date">${r.date}</span>
+                        <span class="archive-weekday">${weekday}</span>
+                    </span>
+                    <a class="archive-link" href="./reports/${r.date}.html">查看 →</a>
+                </li>`;
+        }).join('');
+
+        list.innerHTML = html;
+    } catch(e) {
+        document.getElementById('archive-section').style.display = 'none';
+        console.log('存档加载跳过:', e.message);
+    }
+}
+loadArchive();
+</script>
+</body>
+</html>
